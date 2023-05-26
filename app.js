@@ -2,14 +2,20 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const moment = require("moment");
 const printer = require("./lib");
+const fs = require('fs');
+var List = require('prompt-list');
 
 const app = express();
 app.use(bodyParser.json());
 
+// Default printer name will be selected below by prompt list
+let printerName = "ZDesigner ZD230-203dpi ZPL";
+let template = "";
+
 // Set up CORS Middleware and logging
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header(
+  res.header( 
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, x-access-token, Content-Type, Accept"
   );
@@ -82,60 +88,28 @@ const printRaw = (printerName, data) => {
     return setUp
 }
 
-const template = `
-^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR6,6~SD10^JUS^LRN^CI0^XZ
-^XA
-^MMT
-^PW799
-^LL0400
-^LS0
-^FO32,0^GFA,04608,04608,00012,:Z64:
-eJzt2MENABAUA1DiKrGy0WyGA4c/Ank9vaSdoCn9nzZPenS9g8HMzMzMzMzM/LZzj79Hud7dAsveQQ0=:0691
-^FO320,32^GFA,05760,05760,00036,:Z64:
-eJztlLGKxCAQhidhhJQGtJd7EgNjr6DvY+lj7yS5vdtLDtNlt5hP1NiMP8MXAQRBeDP+YtwMXnF3IH/BzXE+rz/iTxfxp4/400f86SP+9NkkISBFC+8ByZP3cV2O/jj3BaMD2Ffn3Lb/AedcbNCLDUlFHFL2NOjTlVOtdZ38tR6grfuzwoYyhpMgz5INolWWgjn0Z3wtOR7O3wypLEBYlJ9B5yGlGdM5T6u1Ta3Vqe1hWvvNs1uC0XIdWsDraAmiKqrooz/PZjj3k+/UH224juY6Mc4EGpVSpzwchgPxqFtz2jSd+1NywZCDDZRN5tPaMnl/4BP/L3l/uog/fcSfPuJPH/Gnj/gj/MsDCkuLHg==:3036
-^FT277,229^A0I,23,24^FH\^FDQty(Pcs.)^FS
-^FT446,228^A0I,23,24^FH\^FDLength(mm.)^FS
-^FT278,202^A0I,23,24^FH\^FD\_qty_\/\_qty_per_pack_\^FS
-^FT599,228^A0I,23,24^FH\^FDThick(mm.)^FS
-^FT364,293^A0I,23,24^FH\^FDSurface^FS
-^FT666,26^A0I,17,16^FH\^FD\_serial_number_\^FS
-^FT751,25^A0I,17,16^FH\^FDSERIAL NO.^FS
-^FT446,201^A0I,23,24^FH\^FD\_length_\^FS
-^FT751,227^A0I,23,24^FH\^FDWidth(mm.)^FS
-^FT299,358^A0I,23,24^FH\^FDPacking List #^FS
-^FT598,201^A0I,23,24^FH\^FD\_thick_\^FS
-^FT580,293^A0I,23,24^FH\^FDColor^FS
-^FT364,266^A0I,23,24^FH\^FD\_surface_\^FS
-^FT751,199^A0I,23,24^FH\^FD\_width_\^FS
-^FT298,331^A0I,23,24^FH\^FD\_packing_list_\^FS
-^FT448,357^A0I,23,24^FH\^FDDescription^FS
-^FT591,356^A0I,23,24^FH\^FDProduct ID^FS
-^FT752,354^A0I,23,24^FH\^FDImport Date^FS
-^FT580,266^A0I,23,24^FH\^FD\_color_\^FS
-^FT448,330^A0I,23,24^FH\^FD\_description_\^FS
-^FT591,329^A0I,23,24^FH\^FD\_product_id_\^FS
-^FT752,292^A0I,23,24^FH\^FDModel^FS
-^FT751,264^A0I,23,24^FH\^FD\_model_\^FS
-^FT751,325^A0I,23,24^FH\^FD\_import_date_\^FS
-^FT76,67^A0R,23,24^FB263,1,0,C^FH\^FDwww.biowoodthailand.com^FS
-^FT48,67^A0R,23,24^FB263,1,0,C^FH\^FDTel. 0917370857^FS
-^FO630,0^BY1,2.0,60^BQN,2,4^FDQA \_serial_number_\^FS
-^PQ1,0,1,Y^XZ
-`;
-  
-app.post("/zpl_print", (req, res) => {
-    console.log("---------------- START PRINTING ----------------");
-    // Check Printer
-    // printerName = util.CheckPrinterName();
-    // if(!printer) { return no printer }
+app.post("/test", (req, res) => {
+    printer.printDirect(
+        {data: template
+        , printer: printerName
+        , type: 'RAW'
+        , success:function(jobID){
+            console.log("sent to printer with ID: "+jobID);
+        }
+        , error:function(err){console.log(err);}
+    });
 
+    res.send("Test successfully");
+});
+  
+app.post("/print", (req, res) => {
+    console.log("---------------- START PRINTING ----------------");
     // Mapping template
-    const printerName = "ZDesigner ZD230-203dpi ZPL";
     const data = req.body;
     if(!data) {
         res.status(201).json({ status: "error", message: "data  is required" });
     }
-    console.log(req.body);
+    // console.log(req.body);
     // console.log(data)
 
     // Format data
@@ -155,9 +129,49 @@ app.post("/zpl_print", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send("ZPL Printer Service is running");
+    res.send("Printer service is running");
 });
 
-app.listen(4000, () => {
-    console.log("Start server at port 4000.");
+// Select printer before running service
+util = require('util');
+var list = new List({
+    name: 'printer',
+    message: 'Please select a printer...',
+    choices: printer.getPrinters()
 });
+
+console.log("-------------------------------------------------------------------------------------");
+console.log("You can setup your template in template.txt file (Example here: example-template.txt)");
+console.log("-------------------------------------------------------------------------------------");
+list.ask(function(answer) {
+    // Select printer
+    printerName = answer;
+
+    // Get template from template.txt
+    try {
+        let data = fs.readFileSync('./template.txt', 'utf8');
+        template = data;
+    } catch (err) {
+        console.log("Can't read template (template.txt)");
+        return false;
+        // console.log(err);
+    }
+
+    if(!template || template == "") {
+        console.log("Template is empty");
+        return false;
+    }
+
+    app.listen(4000, () => {
+        console.log("Printer service is running on port 4000");
+        console.log("-------------------------------------------------------------------------------------");
+        console.log("You can now use the service by posting to following");
+        console.log("For testing use: http://localhost:4000/test");
+        console.log("For printing use: http://localhost:4000/print");
+        console.log("-------------------------------------------------------------------------------------");
+        console.log("Other guidelines: https://github.com/npr-digital-partner/zpl-printer-new");
+    });
+    return false;
+});
+   
+
