@@ -137,19 +137,23 @@ const question = [
     {
         type: 'password',
         name: 'license',
-        message: 'Please enter license (to get license > website: www.npr.digital or email: contact@npr.digital)'
+        message: 'Please enter license code'
     }
 ];
 
+console.log("📌 To get license please contact:");
+console.log("> Website: www.npr.digital");
+console.log("> Email: contact@npr.digital");
+console.log("-------------------------------------------------------------------------------------");
 prompt(question)
 .then(input => {
     // Validate license
     console.log("Validating license....")
     if(input.license != "dc306362-2fae-45ad-bfce-4d80dc5339fa") {
-        console.log("🚫License is not valid. Please try again.")
+        console.log("🚫 License is not valid. Please try again.")
         return false
     } else {
-        console.log("✅License is valid.")
+        console.log("✅ License is valid.")
         // Select printer before running service
         util = require('util');
         let list = new List({
@@ -160,7 +164,7 @@ prompt(question)
         list.run()
         .then(function(answer) {
             if(!answer) {
-                console.log("❌Please select a printer");
+                console.log("❌ Please select a printer");
                 return false
             }
              // Select printer
@@ -172,13 +176,13 @@ prompt(question)
                 template = data;
                 // console.log("data", data)
             } catch (err) {
-                console.log("❌Can't read template (template.zpl)");
+                console.log("❌ Can't read template (template.zpl)");
                 return false;
                 // console.log(err);
             }
 
             if(!template || template == "") {
-                console.log("❌Template is empty. Please setup at template.zpl");
+                console.log("❌ Template is empty. Please setup at template.zpl");
                 return false;
             }
 
@@ -187,15 +191,15 @@ prompt(question)
             app.listen(port, () => {
                 console.log("-------------------------------------------------------------------------------------");
                 console.log(" ");
-                console.log(`🔥Printer service is running on port ${port}🔥`);
+                console.log(`🔥 Printer service is running on port ${port} 🔥`);
                 console.log(" ");
                 console.log("-------------------------------------------------------------------------------------");
-                console.log("📌You can now use the service by posting to following");
+                console.log("📌 You can now use the service by posting to following");
                 console.log("> For testing use: http://localhost:4000/test");
                 console.log("> For printing use: http://localhost:4000/print");
                 console.log("-------------------------------------------------------------------------------------");
-                //console.log("📌You can config printing template in template.zpl file and restart application (Example here: example-template.zpl)");
-                console.log("❔Other guidelines go visit: https://github.com/npr-digital-partner/zpl-printer-new");
+                //console.log("📌 You can config printing template in template.zpl file and restart application (Example here: example-template.zpl)");
+                console.log("❔ Other guidelines go visit: https://github.com/npr-digital-partner/zpl-printer-new");
                 console.log("-------------------------------------------------------------------------------------");
             });
             return false;

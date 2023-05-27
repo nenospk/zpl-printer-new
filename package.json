@@ -49,5 +49,8 @@
         "prebuild-install": "^7.0.1",
         "prompt-list": "^3.2.0",
         "prompts": "^2.4.2"
-    }
+    },
+    "bin" : {
+        "execute" : "app.js"
+    } 
 }
