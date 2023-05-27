@@ -1,61 +1,53 @@
 {
-  "name": "@thiagoelg/node-printer",
-  "description": "Node.js printer bindings",
-  "version": "0.6.2",
-  "homepage": "https://github.com/thiagoelg/node-printer",
-  "author": {
-    "name": "Ion Lupascu",
-    "url": "http://program-support.co.uk/",
-    "email": "ionlupascu@gmail.com"
-  },
-  "contributors": [
-    "Thiago Lugli <thiagoelg@gmail.com>",
-    "Eko Eryanto <ekoeryanto@gmail.com>"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/thiagoelg/node-printer.git"
-  },
-  "devDependencies": {
-    "node-abi": "^3.8.0",
-    "nodeunit": "*",
-    "patch-package": "^6.4.7",
-    "prebuild": "^11.0.3",
-    "prebuild-ci": "^4.0.0"
-  },
-  "engines": {
-    "node": ">= 4.0.0"
-  },
-  "scripts": {
-    "install": "prebuild-install || node-gyp rebuild",
-    "apply-patches": "patch-package",
-    "prebuild-all": "prebuild --all --force --strip --verbose --openssl_fips=X",
-    "prebuild": "prebuild",
-    "rebuild": "node-gyp rebuild",
-    "test": "nodeunit test"
-  },
-  "binary": {
-    "module_name": "node_printer",
-    "module_path": "./lib/",
-    "host": "https://github.com/thiagoelg/node-printer/releases/download/",
-    "remote_path": "v{version}"
-  },
-  "licenses": [
-    {
-      "type": "BSD"
+    "name": "zpl-printer-new",
+    "description": "Node.js printer bindings",
+    "version": "1.0.0",
+    "main": "app.js",
+    "author": {
+        "name": "NPR Digital Partner",
+        "url": "http://npr.digital",
+        "email": "contact@npr.digital"
+    },
+    "devDependencies": {
+        "node-abi": "^3.8.0",
+        "nodeunit": "*",
+        "patch-package": "^6.4.7",
+        "prebuild": "^11.0.3",
+        "prebuild-ci": "^4.0.0"
+    },
+    "engines": {
+        "node": ">= 4.0.0"
+    },
+    "scripts": {
+        "install": "npm install @thiagoelg/node-printer || prebuild-install || node-gyp rebuild",
+        "apply-patches": "patch-package",
+        "prebuild-all": "prebuild --all --force --strip --verbose --openssl_fips=X",
+        "prebuild": "prebuild",
+        "rebuild": "node-gyp rebuild",
+        "test": "nodeunit test"
+    },
+    "binary": {
+        "module_name": "node_printer",
+        "module_path": "./lib/",
+        "host": "https://github.com/thiagoelg/node-printer/releases/download/",
+        "remote_path": "v{version}"
+    },
+    "licenses": [
+        {
+            "type": "BSD"
+        }
+    ],
+    "dependencies": {
+        "@thiagoelg/node-printer": "^0.6.2",
+        "body-parser": "^1.20.2",
+        "enquirer": "^2.3.6",
+        "express": "^4.18.2",
+        "fs": "^0.0.1-security",
+        "inquirer": "^9.2.6",
+        "moment": "^2.29.4",
+        "nan": "^2.15.0",
+        "prebuild-install": "^7.0.1",
+        "prompt-list": "^3.2.0",
+        "prompts": "^2.4.2"
     }
-  ],
-  "main": "./lib/printer",
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "express": "^4.18.2",
-    "fs": "^0.0.1-security",
-    "inquirer": "^9.2.6",
-    "moment": "^2.29.4",
-    "nan": "^2.15.0",
-    "prebuild-install": "^7.0.1",
-    "prompt-list": "^3.2.0",
-    "prompts": "^2.4.2"
-  },
-  "types": "types/index.d.ts"
 }

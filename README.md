@@ -1,61 +1,82 @@
-Node Printer Prebuild
-============
-Native bind printers on POSIX and Windows OS from Node.js, electron and node-webkit.
 
-[![npm version](https://badge.fury.io/js/@thiagoelg%2Fnode-printer.svg)](https://www.npmjs.com/package/@thiagoelg/node-printer) [![Prebuild Binaries and Publish](https://github.com/thiagoelg/node-printer/actions/workflows/prebuild-main.yml/badge.svg)](https://github.com/thiagoelg/node-printer/actions/workflows/prebuild-main.yml)
+# Node ZPL Printer
 
-> It just works with Node 12 because of @thiagoelg in his [PR](https://github.com/tojocky/node-printer/pull/261)
+This repository is adjusted to support printing using ZPL language 
+(Tested with Zebra printer: [ZD230](https://www.pospak.com/th/zebra-zd230))
 
-> Prebuild and CI integration courtesy of @ekoeryanto in his [FORK](https://github.com/ekoeryanto/node-printer)
+Thanks to original library [@thiagoelg/node-printer](https://github.com/thiagoelg/node-printer)
 
-If you have a problem, ask question to [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tojocky/node-printer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) or find/create a new [Github issue](https://github.com/thiagoelg/node-printer/issues)
-
+If you have a problem, ask or find/create a new [Github issue](https://github.com/npr-digital-partner/zpl-printer-new/issues)
 ___
-### **Below is the original README**
-___
-### Reason:
 
-I was involved in a project where I need to print from Node.JS. This is the reason why I created this project and I want to share my code with others.
-
+### Purpose:
+I need to find a solution that allow web application to manage and print barcode labels for WMS. I can't find solution that connect web app to barcode printer, so I decide to create this to serve the purpose.
 
 ### Features:
+* NodeJS application to receive payload from web application and send to printer
+* For testing use: `http://localhost:4000/test`
 
-* no dependecies;
-* native method wrappers from Windows  and POSIX (which uses [CUPS 1.4/MAC OS X 10.6](http://cups.org/)) APIs;
-* compatible with node v0.8.x, 0.9.x and v0.11.x (with 0.11.9 and 0.11.13);
-* compatible with node-webkit v0.8.x and 0.9.2;
-* `getPrinters()` to enumerate all installed printers with current jobs and statuses;
-* `getPrinter(printerName)` to get a specific/default printer info with current jobs and statuses;
-* `getPrinterDriverOptions(printerName)` ([POSIX](http://en.wikipedia.org/wiki/POSIX) only) to get a specific/default printer driver options such as supported paper size and other info
-* `getSelectedPaperSize(printerName)` ([POSIX](http://en.wikipedia.org/wiki/POSIX) only) to get a specific/default printer default paper size from its driver options
-* `getDefaultPrinterName()` return the default printer name;
-* `printDirect(options)` to send a job to a specific/default printer, now supports [CUPS options](http://www.cups.org/documentation.php/options.html) passed in the form of a JS object (see `cancelJob.js` example). To print a PDF from windows it is possible by using [node-pdfium module](https://github.com/tojocky/node-pdfium) to convert a PDF format into EMF and after to send to printer as EMF;
-* `printFile(options)`  ([POSIX](http://en.wikipedia.org/wiki/POSIX) only) to print a file;
-* `getSupportedPrintFormats()` to get all possible print formats for printDirect method which depends on OS. `RAW` and `TEXT` are supported from all OS-es;
-* `getJob(printerName, jobId)` to get a specific job info including job status;
-* `setJob(printerName, jobId, command)` to send a command to a job (e.g. `'CANCEL'` to cancel the job);
-* `getSupportedJobCommands()` to get supported job commands for setJob() depends on OS. `'CANCEL'` command is supported from all OS-es.
+* For printing use: `http://localhost:4000/print` (see example below)
+
+* Compatible with window only!
 
 
 ### How to install:
+
 ```
-npm install @thiagoelg/node-printer
+# Download this project
+
+# Install all dependencies using
+npm install
+
+# Run application and select printer
+node app.js
 ```
+
+  
 
 ### How to use:
 
-See [examples](https://github.com/thiagoelg/node-printer/tree/main/examples)
+* Connect printers to computer and install printer driver
+> For Zebra printer [ZebraDesigner.rar](https://drive.google.com/file/d/1AA174_7RpEhwDjFfyvU6OfiowU-H4Ybm/view?usp=share_link)
 
+* Config printing template in template.zpl file (Example here: example-template.zpl)
+
+* To design label you can use [ZPL Viewer](http://labelary.com/viewer.html)
+
+* You can now use the service by posting to following
+> For testing POST to: http://localhost:4000/test
+> For printing POST to: http://localhost:4000/print with following example payload
+```
+[
+	{
+		"productId": "P001",
+		"productName": "ABC",
+		"productSn": "SN000001",
+		"productLot": "09/05/2023",
+		"productQty": "300",
+		"productUom": "Unit",
+		"productBarcode": "P001#LOT09052023#SN000001#300",
+	},
+	{
+		"productId": "P002",
+		"productName": "DEF",
+		"productSn": "SN000002",
+		"productLot": "09/05/2023",
+		"productQty": "99",
+		"productUom": "Unit",
+		"productBarcode": "P002#LOT09052023#SN000002#99",
+	},
+]
+```
+---
 ### Author(s):
 
-* Ion Lupascu, ionlupascu@gmail.com
+* Suppakit Krasettrakarn, suppakit@npr.digital
 
-### Contibutors:
+* NPR Digital Partner (https://npr.digital)
 
-* Thiago Lugli, @thiagoelg
-* Eko Eryanto, @ekoeryanto
-
-Feel free to download, test and propose new futures
 
 ### License:
- [The MIT License (MIT)](http://opensource.org/licenses/MIT)
+
+[The MIT License (MIT)](http://opensource.org/licenses/MIT)

@@ -4,6 +4,7 @@ const moment = require("moment");
 const printer = require("./lib");
 const fs = require('fs');
 var List = require('prompt-list');
+const { prompt } = require('enquirer');
 
 const app = express();
 app.use(bodyParser.json());
@@ -132,46 +133,72 @@ app.get("/", (req, res) => {
     res.send("Printer service is running");
 });
 
-// Select printer before running service
-util = require('util');
-var list = new List({
-    name: 'printer',
-    message: 'Please select a printer...',
-    choices: printer.getPrinters()
-});
-
-console.log("-------------------------------------------------------------------------------------");
-console.log("You can setup your template in template.txt file (Example here: example-template.txt)");
-console.log("-------------------------------------------------------------------------------------");
-list.ask(function(answer) {
-    // Select printer
-    printerName = answer;
-
-    // Get template from template.txt
-    try {
-        let data = fs.readFileSync('./template.txt', 'utf8');
-        template = data;
-    } catch (err) {
-        console.log("Can't read template (template.txt)");
-        return false;
-        // console.log(err);
+const question = [
+    {
+        type: 'password',
+        name: 'license',
+        message: 'Please enter license (to get one contact: www.npr.digital)'
     }
+];
 
-    if(!template || template == "") {
-        console.log("Template is empty");
-        return false;
+prompt(question)
+.then(input => {
+    // Validate license
+    console.log("Validating license....")
+    if(input.license != "dc306362-2fae-45ad-bfce-4d80dc5339fa") {
+        console.log("🚫License is not valid. Please try again.")
+        return false
+    } else {
+        console.log("✅License is valid.")
+        // Select printer before running service
+        util = require('util');
+        let list = new List({
+            name: 'printer',
+            message: 'Please select a printer...',
+            choices: printer.getPrinters()
+        });
+        list.run()
+        .then(function(answer) {
+            if(!answer) {
+                console.log("❌Please select a printer");
+                return false
+            }
+             // Select printer
+            printerName = answer;
+
+            // Get template from template.zpl
+            try {
+                let data = fs.readFileSync('./template.zpl', 'utf8');
+                template = data;
+                // console.log("data", data)
+            } catch (err) {
+                console.log("❌Can't read template (template.zpl)");
+                return false;
+                // console.log(err);
+            }
+
+            if(!template || template == "") {
+                console.log("❌Template is empty. Please setup at template.zpl");
+                return false;
+            }
+
+            // Run application
+            const port = 4000;
+            app.listen(port, () => {
+                console.log("-------------------------------------------------------------------------------------");
+                console.log(" ");
+                console.log(`🔥Printer service is running on port ${port}🔥`);
+                console.log(" ");
+                console.log("-------------------------------------------------------------------------------------");
+                console.log("📌You can now use the service by posting to following");
+                console.log("> For testing use: http://localhost:4000/test");
+                console.log("> For printing use: http://localhost:4000/print");
+                console.log("-------------------------------------------------------------------------------------");
+                //console.log("📌You can config printing template in template.zpl file and restart application (Example here: example-template.zpl)");
+                console.log("❔Other guidelines go visit: https://github.com/npr-digital-partner/zpl-printer-new");
+                console.log("-------------------------------------------------------------------------------------");
+            });
+            return false;
+        });
     }
-
-    app.listen(4000, () => {
-        console.log("Printer service is running on port 4000");
-        console.log("-------------------------------------------------------------------------------------");
-        console.log("You can now use the service by posting to following");
-        console.log("For testing use: http://localhost:4000/test");
-        console.log("For printing use: http://localhost:4000/print");
-        console.log("-------------------------------------------------------------------------------------");
-        console.log("Other guidelines: https://github.com/npr-digital-partner/zpl-printer-new");
-    });
-    return false;
 });
-   
-
