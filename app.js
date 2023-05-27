@@ -137,7 +137,7 @@ const question = [
     {
         type: 'password',
         name: 'license',
-        message: 'Please enter license (to get one contact: www.npr.digital)'
+        message: 'Please enter license (to get license > website: www.npr.digital or email: contact@npr.digital)'
     }
 ];
 
