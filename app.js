@@ -55,20 +55,13 @@ const formatData = (data) => {
 }
 
 const mapData = (template, data) => {
-    template = template.replace(/_import_date_/g, data.import_date);
-    template = template.replace(/_product_id_/g, data.product_id);
-    template = template.replace(/_description_/g, data.description);
-    template = template.replace(/_packing_list_/g, data.packing_list);
-    template = template.replace(/_model_/g, data.model);
-    template = template.replace(/_color_/g, data.color);
-    template = template.replace(/_surface_/g, data.surface);
-    template = template.replace(/_width_/g, data.width);
-    template = template.replace(/_thick_/g, data.thick);
-    template = template.replace(/_length_/g, data.length);
-    template = template.replace(/_qty_per_pack_/g, data.qty_per_pack);
-    template = template.replace(/_qty_/g, data.qty);
-    template = template.replace(/_serial_number_/g, data.serial_number);
-    // console.log(mapData)
+    template = template.replace(/_productId_/g, data.productId);
+    template = template.replace(/_productName_/g, data.productName);
+    template = template.replace(/_productSn_/g, data.productSn);
+    template = template.replace(/_productLot_/g, data.productLot);
+    template = template.replace(/_productBarcode_/g, data.productBarcode);
+    template = template.replace(/_productQty_/g, data.productQty);
+    template = template.replace(/_productUom_/g, data.productUom);
     return template;
 }
 
